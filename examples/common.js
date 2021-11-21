@@ -55,6 +55,24 @@ const Square = defs.Square =
         }
     }
 
+const Square2 = defs.Square2 =
+    class Square2 extends Shape {
+        // **Square** demonstrates two triangles that share vertices.  On any planar surface, the
+        // interior edges don't make any important seams.  In these cases there's no reason not
+        // to re-use data of the common vertices between triangles.  This makes all the vertex
+        // arrays (position, normals, etc) smaller and more cache friendly.
+        constructor() {
+            super("position", "normal", "texture_coord");
+            // Specify the 4 square corner locations, and match those up with normal vectors:
+            this.arrays.position = Vector3.cast([-1, -1, 0], [1, -1, 0], [-1, 1, 0], [1, 1, 0]);
+            this.arrays.normal = Vector3.cast([0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]);
+            // Arrange the vertices into a square shape in texture space too:
+            this.arrays.texture_coord = Vector.cast([0, 0], [2, 0], [0, 2], [2, 2]);
+            // Use two triangles this time, indexing into four distinct vertices:
+            this.indices.push(0, 1, 2, 1, 3, 2);
+        }
+    }
+
 
 const Tetrahedron = defs.Tetrahedron =
     class Tetrahedron extends Shape {
@@ -151,6 +169,26 @@ const Cube = defs.Cube =
                     // Calling this function of a Square (or any Shape) copies it into the specified
                     // Shape (this one) at the specified matrix offset (square_transform):
                     Square.insert_transformed_copy_into(this, [], square_transform);
+                }
+        }
+    }
+
+const Cube2 = defs.Cube2 =
+    class Cube2 extends Shape {
+        // **Cube2** A closed 3D shape, and the first example of a compound shape (a Shape constructed
+        // out of other Shapes).  A cube2 inserts six Square strips into its own arrays, using six
+        // different matrices as offsets for each square.
+        constructor() {
+            super("position", "normal", "texture_coord");
+            // Loop 3 times (for each axis), and inside loop twice (for opposing cube2 sides):
+            for (let i = 0; i < 3; i++)
+                for (let j = 0; j < 2; j++) {
+                    const square_transform = Mat4.rotation(i == 0 ? Math.PI / 2 : 0, 1, 0, 0)
+                        .times(Mat4.rotation(Math.PI * j - (i == 1 ? Math.PI / 2 : 0), 0, 1, 0))
+                        .times(Mat4.translation(0, 0, 1));
+                    // Calling this function of a Square (or any Shape) copies it into the specified
+                    // Shape (this one) at the specified matrix offset (square_transform):
+                    Square2.insert_transformed_copy_into(this, [], square_transform);
                 }
         }
     }
