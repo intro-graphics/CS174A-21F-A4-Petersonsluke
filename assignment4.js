@@ -130,35 +130,35 @@ class Texture_Scroll_X extends Textured_Phong {
                 vec2 new_scroll = f_tex_coord + scroll;
                 vec4 tex_color = texture2D( texture, new_scroll);
 
-
-//                 float u = mod(f_tex_coord.x, 1.0);
-//                 float v = mod(f_tex_coord.y, 1.0);
                 
-//                 float right = sqrt(pow(u - 0.6, 1.0)); 
-//                 float left = sqrt(pow(u - 0.1, 1.0)); 
-//                 float top = sqrt(pow(v - 0.6, 1.0));
-//                 float bottom = sqrt(pow(v - 0.1, 1.0));
-//                 if (right > 0.3 && right < 0.5) {
-//                     tex_color = vec4(0, 0, 0, 1.0);
-//                 }
-//                 if (left > 0.3 && left < 0.5) {
-//                     tex_color = vec4(0, 0, 0, 1.0);
-//                 }
-//                 if (top > 0.3 && top < 0.5) {
-//                     tex_color = vec4(0, 0, 0, 1.0);
-//                 }
-//                 if (bottom > 0.3 && bottom < 0.5) {
-//                     tex_color = vec4(0, 0, 0, 1.0);
-//                 }
-
-                // // black out wrt to the original tex corrd
-                // float u = mod(f_tex_coord.x, 1.0);
-                // float v = mod(f_tex_coord.y, 1.0);
-                // float distance_to_center = sqrt(pow(u - 0.5, 2.0) + pow(v - 0.5, 2.0));
-                // if (distance_to_center > 0.3 && distance_to_center < 0.4) {
-                //     tex_color = vec4(0, 0, 0, 1.0);
-                // }
-
+                //EXAMPLE CODE TAKEN FROM DIS 1C WEEK 8 EXAMPLE 4
+                float u = mod(f_tex_coord.x + scroll.x, 1.0);
+                float v = mod(f_tex_coord.y + scroll.y, 1.0);
+                  //float distance_to_center
+                  if (u > 0.75 && u < 0.85)
+                  {
+                    if (v > 0.15 && v < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (u > 0.15 && u < 0.25)
+                  {
+                    if (v > 0.15 && v < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (v > 0.15 && v < 0.25)
+                  {
+                    if (u > 0.15 && u < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (v > 0.75 && v < 0.85)
+                  {
+                    if (u > 0.15 && u < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
 
                  
                                                                          // Compute an initial (ambient) color:
@@ -184,11 +184,42 @@ class Texture_Rotate extends Textured_Phong {
 //                 if( tex_color.w < .01 ) discard;
                 
                
-                float rot = (3.14/2.0)*mod(animation_time,16.0);
+                //USING MATRICES AND VEC2 TO SET ROTATION
+                float rot = (-3.14/2.0)*mod(animation_time,16.0);
                 mat2 rot_vec = mat2(cos(rot), sin(rot), -1.*sin(rot), cos(rot));
                 vec2 extended_rot_vec = rot_vec * (f_tex_coord - vec2(0.5,0.5));
-                vec2 rotation = extended_rot_vec + vec2(0.5,0.5);
-                vec4 tex_color = texture2D( texture, rotation );
+                vec2 rock = extended_rot_vec + vec2(0.5,0.5);
+                vec4 tex_color = texture2D( texture, rock );
+
+                //EXAMPLE CODE TAKEN FROM DIS 1C WEEK 8 EXAMPLE 4
+                float u = rock.x;
+                float v = rock.y;
+                  //float distance_to_center
+                  if (u > 0.75 && u < 0.85)
+                  {
+                    if (v > 0.15 && v < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (u > 0.15 && u < 0.25)
+                  {
+                    if (v > 0.15 && v < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (v > 0.15 && v < 0.25)
+                  {
+                    if (u > 0.15 && u < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+                  if (v > 0.75 && v < 0.85)
+                  {
+                    if (u > 0.15 && u < 0.85) {
+                        tex_color = vec4(0, 0, 0, 1.0);
+                    }
+                  }
+
                    
                                                                          // Compute an initial (ambient) color:
                 gl_FragColor = vec4( ( tex_color.xyz + shape_color.xyz ) * ambient, shape_color.w * tex_color.w ); 
